@@ -18,9 +18,12 @@ Installation
    the Gamestation Pro.
 4. If you have already updated to the latest firmware, uncheck the box beside
    the `firmware` partition. If you haven't updated, leave the box checked.
-5. Add a new partition entry (right click the box and click Add Item), with
+5. Add a new partition entry (right click the left box and click Add Item), with
    address `0x00000800`, name `boot`, and browse for the `boot.img` that you
-   downloaded (use the blank button at the end of the row).
+   downloaded (use the blank button at the end of the row). Ensure the box at
+   the beginning of the row is checked.  
+   ![Screenshot of RKDevTool with menu open for editing image downloads](img/rkdevtool_add_item.png)  
+   ![Screenshot of RKDevTool with boot image item added](img/rkdevtool_select_boot.png)
 6. Continue following the rest of the update instructions.
 
 Usage
