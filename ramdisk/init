@@ -1,0 +1,17 @@
+#!/bin/busybox sh
+
+# Create necessary directories
+busybox mkdir -p /dev /rootfs /newroot /overlay/workdir
+# Load overlay module
+busybox insmod /lib/modules/4.4.194/kernel/fs/overlayfs/overlay.ko
+
+# Mount rootfs
+busybox mount -t devtmpfs devtmpfs /dev
+busybox mount -t squashfs /dev/rkflash0p4 /rootfs
+
+# Mount overlay
+busybox mount -n -t overlay overlay -o lowerdir=/rootfs,upperdir=/overlay/upperdir,workdir=/overlay/workdir /newroot
+
+# chroot to new rootfs and start init
+cd /newroot
+exec busybox chroot . /init

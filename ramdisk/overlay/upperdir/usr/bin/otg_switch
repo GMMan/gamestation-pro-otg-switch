@@ -1,0 +1,29 @@
+#!/bin/sh
+
+switch_otg() {
+    echo 0 > /sys/devices/platform/usb_control/usb_en_enable
+    echo 0 > /sys/devices/platform/usb_control/dongle_en_enable
+    devmem 0x2000817c 32 0x06000600
+}
+
+switch_host() {
+    echo 1 > /sys/devices/platform/usb_control/usb_en_enable
+    devmem 0x2000817c 32 0x06000200
+    echo 1 > /sys/devices/platform/usb_control/dongle_en_enable
+}
+
+case "$1" in
+  otg)
+    switch_otg
+    ;;
+  host)
+    switch_host
+    ;;
+  *)
+    if [ "x1" = "x$(cat /sys/devices/platform/usb_control/usb_en_enable)" ]; then
+        switch_otg
+    else
+        switch_host
+    fi
+    ;;
+esac

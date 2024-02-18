@@ -1,0 +1,43 @@
+#!/bin/sh
+#
+# Start ui
+#
+
+#hdmi on
+echo on > /sys/class/drm/card0-HDMI-A-1/status
+
+printf "Starting ui: =========add lv 49launcher\n"
+
+case "$1" in
+  start)
+    printf "Starting ui: \n"
+    export XDG_CONFIG_HOME=/userdata/
+    #start ui
+    export MG_CFG_PATH=/etc
+    if [ `cat sys/devices/platform/gpio-keys/test_mode` == 1 ]; then
+      otg_switch otg
+    else
+      otg_switch host
+    fi
+    
+    if [ -e "/sdcard/game/GBX107_pcba.txt" ]; then
+      /usr/bin/aplay -q /usr/local/share/minigui/res/music/select_ding_low.wav
+      sleep 2
+      /usr/bin/PCBA_TEST &
+    elif [ -e "/sdcard/game/GBX107_test.txt" ]; then
+      /usr/bin/game_test&
+    else
+	    /usr/bin/ffplay -x 1280 -y 720 -hide_banner -nostats -fs -vcodec h264 -autoexit /usr/local/share/minigui/res/images/logo.mp4 && dd if="/dev/zero" of="/dev/fb0"
+      /usr/bin/game &
+    fi
+    ;;
+  stop)
+    #killall ui
+    killall game &
+    printf "ui stop finished"
+    ;;
+  *)
+    echo "Usage: $0 {start|stop}"
+    exit 1
+    ;;
+esac
